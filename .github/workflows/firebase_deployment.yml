@@ -18,13 +18,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Send push notification
-      - name: Send Push Notification
+      - name: Deploying Notification
         uses: techulus/push-github-action@1.0.0
         env:
           API_KEY: ${{ secrets.API_KEY }}
           MESSAGE: "Start deploying to Firebase..."
           TITLE: Github Action
-          LINK: "https://github.com/${{ github.repository }}/runs/${{ github.job }}"
+          LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.job }}"
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
           FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT }}
 
       # Send push notification
-      - name: Send Push Notification
+      - name: Deployed Notification
         uses: techulus/push-github-action@1.0.0
         env:
           API_KEY: ${{ secrets.API_KEY }}
