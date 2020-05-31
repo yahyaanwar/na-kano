@@ -24,7 +24,7 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
           MESSAGE: "Start deploying to Firebase..."
           TITLE: Github Action
-          LINK: ${{ "https://github.com/" + github.repository + "/runs/" + github.run_id }}
+          LINK: "https://github.com/${{ github.repository }}/runs/${{ github.run_id }}"
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
