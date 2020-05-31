@@ -1,0 +1,26 @@
+{
+  "name": "Nakano",
+  "version": "1.0.0",
+  "description": "Todo App",
+  "main": "index.js",
+  "author": "Yahya Anwar <yahya.anw@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "browserslist": [
+    "last 1 chrome versions"
+  ],
+  "scripts": {
+    "dev": "parcel serve src/index.html",
+    "build": "parcel build src/index.html",
+    "start": "sirv dist/"
+  },
+  "devDependencies": {
+    "firebase": "^7.14.6",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-svelte": "^4.0.6",
+    "sass": "^1.26.7",
+    "sirv-cli": "^0.4.6",
+    "svelte": "^3.23.0",
+    "sveltefire": "^0.1.4"
+  }
+}
