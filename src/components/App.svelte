@@ -50,14 +50,16 @@
 
   let user = sessionStorage.sveltefire_user;
   let stateRef = null;
-  let viewType = "Simple";
+  let activeView = "Simple";
   let activeStatus = "All";
   let activeWorkspace = "All";
-  let activeTags = ["All"];
+  let activeTags = [];
   let hideCreate = true;
+  let isFilterHidden = false;
 
   function toggleWorkspace(event) {
     activeWorkspace = event.detail.selected;
+    activeTags = [];
   }
 
   function toggleStatus(event) {
@@ -68,16 +70,41 @@
     activeTags = event.detail.selected;
   }
 
+  function toggleView(event) {
+    activeView = event.detail.selected;
+  }
+
   function currentUserChange(event) {
     user = event.detail.user;
   }
 
   function stateData(event) {
-    if (event.detail.data === null) {
+    const data = event.detail.data;
+    if (data === null) {
       stateRef.set({
-        activeWorkspace: "All",
-        activeStatus: "All",
-        activeTags: []
+        activeWorkspace,
+        activeStatus,
+        activeTags,
+        activeView,
+        isFilterHidden
+      });
+    } else if (data) {
+      activeStatus = data.activeStatus || activeStatus;
+      activeWorkspace = data.activeWorkspace || activeWorkspace;
+      activeTags = data.activeTags || activeTags;
+      activeView = data.activeView || activeView;
+      isFilterHidden = data.isFilterHidden || isFilterHidden;
+    }
+  }
+
+  function saveFilterState() {
+    if (stateRef) {
+      stateRef.set({
+        activeWorkspace,
+        activeStatus,
+        activeTags,
+        activeView,
+        isFilterHidden
       });
     }
   }
@@ -172,43 +199,52 @@
         log>
         <section
           class="filter can-hide"
-          class:hide={hide === 'filters'}
+          class:hide={isFilterHidden}
           style="--title: 'filters'">
           <span
             class="hide-btn"
-            on:click={() => (hide = hide ? false : 'filters')} />
+            on:click={() => {
+              isFilterHidden = !isFilterHidden;
+              saveFilterState();
+            }} />
           <div class="flex">
             <Toggle
               name="Workspaces"
               lists={todosData.flatMap(todo => todo.workspace)}
+              bind:selected={activeWorkspace}
               on:toggle={toggleWorkspace}
               single />
             <Toggle
               name="Status"
               lists={['All', 'Active', 'Completed']}
+              bind:selected={activeStatus}
               on:toggle={toggleStatus}
               single />
           </div>
           <div class="flex">
             <Toggle
               name="Tags"
-              lists={todosData.flatMap(todo => todo.tags)}
+              bind:selected={activeTags}
+              lists={todosData
+                .filter(todo => todo.workspace == activeWorkspace)
+                .flatMap(todo => todo.tags)}
               on:toggle={toggleTags} />
             <Toggle
               name="View"
-              selected={['Simple']}
               lists={['Simple', 'Detail']}
-              on:toggle={ev => (viewType = ev.detail.selected)}
+              bind:selected={activeView}
+              on:toggle={toggleView}
               single />
           </div>
         </section>
         <section class="todo">
           <ViewTodo
             todos={todosData}
-            bind:viewType
+            bind:activeView
             bind:activeStatus
             bind:activeWorkspace
-            bind:activeTags />
+            bind:activeTags
+            on:saveFilterState={saveFilterState} />
           <CreateTodo
             bind:workspace={activeWorkspace}
             bind:tags={activeTags}
@@ -224,8 +260,7 @@
       </Collection>
     </Doc>
   {:else}
-    <div
-      style="text-align: center; margin-top: calc(50vh - 43px)">
+    <div style="text-align: center; margin-top: calc(50vh - 43px)">
       <h1>Hello, i'm Nakano!</h1>
       <p>Todo app that will make your day organized</p>
     </div>

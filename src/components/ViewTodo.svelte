@@ -1,5 +1,9 @@
 <script>
+  import { createEventDispatcher } from "svelte";
+
   import Toggle from "./Toggle.svelte";
+
+  const dispatch = createEventDispatcher();
 
   function getStatus(completed_on, reset) {
     if (!reset || reset == "once") {
@@ -26,24 +30,32 @@
   }
 
   export let todos = [];
-  export let activeStatus = "All";
-  export let activeWorkspace = "All";
-  export let activeTags = ["All"];
-  export let viewType = "Simple";
-  let filteredTodos = todos;
+  export let activeStatus = false;
+  export let activeWorkspace = false;
+  export let activeTags = [];
+  export let activeView = "Simple";
+  export let filteredTodos = todos;
 
   $: {
-    filteredTodos = todos.filter(todo => {
-      let result =
-        activeWorkspace == "All" || activeWorkspace == todo.workspace;
-      result &= activeTags.reduce((a, i) => todo.tags.includes(i) || a, false);
-      result &=
-        (result && activeStatus == "All") ||
-        (activeStatus == "Completed") ==
-          getStatus(todo.completed_on, todo.reset);
-      result |= activeWorkspace == todo.workspace && todo.tags.length == 0;
-      return result;
-    });
+    filteredTodos = (() => {
+      let newTodo = todos.filter(todo => {
+        let result =
+          activeStatus == "All" ||
+          (activeStatus == "Completed") ==
+            getStatus(todo.completed_on, todo.reset);
+        result &= activeWorkspace == todo.workspace;
+        result &= activeTags.reduce((a, i) => todo.tags.includes(i) && a, true);
+        return result;
+      });
+
+      let view = activeView;
+
+      if (newTodo.length > 0) {
+        dispatch("saveFilterState", {filteredTodos});
+      }
+
+      return newTodo;
+    })();
   }
 
   function checkboxChange(ref, state, created_on) {
@@ -70,7 +82,7 @@
 {#each filteredTodos as todo}
   <div class="box task-card">
     <div class="flex">
-      {#if viewType == 'Detail'}
+      {#if activeView == 'Detail'}
         <div class="on-detail">
           {#if todo.edited_on && todo.edited_on != todo.created_on}
             <small>Edited: {todo.edited_on.replace(/:\d{2} .*/, '')}</small>
@@ -107,7 +119,7 @@
       <p class="description on-detail" style="margin-left: 24px;">
         {todo.description}
       </p>
-      {#if viewType == 'Simple'}
+      {#if activeView == 'Simple'}
         <div>
           <!-- <button class="link on-detail">Edit</button> -->
           <button class="link on-detail" on:click={() => todo.ref.delete()}>
@@ -116,10 +128,12 @@
         </div>
       {/if}
     </div>
-    {#if viewType == 'Detail'}
+    {#if activeView == 'Detail'}
       <div>
         <small>{todo.workspace && 'On ' + todo.workspace}</small>
-        <small style="padding-left: 20px">{todo.reset && 'Reset ' + todo.reset}</small>
+        <small style="padding-left: 20px">
+          {todo.reset && 'Reset ' + todo.reset}
+        </small>
       </div>
     {/if}
   </div>

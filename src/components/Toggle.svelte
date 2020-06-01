@@ -16,21 +16,14 @@
         newSelected = [list];
       }
 
-      if (list == "All" && selected.includes(list)) {
-        newSelected = ["All"];
-      } else if (list != "All") {
-        newSelected = newSelected.filter(x => x !== "All");
-      }
-
       selected = newSelected;
 
       dispatch("toggle", { selected: single ? list : selected });
-      console.log(selected, lists);
     }
   }
 
   export let lists = [];
-  export let selected = ["All"];
+  export let selected = [];
   export let single = false;
   export let disabled = false;
   export let edit = false;
