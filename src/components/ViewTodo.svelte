@@ -36,7 +36,7 @@
     filteredTodos = todos.filter(todo => {
       let result =
         activeWorkspace == "All" || activeWorkspace == todo.workspace;
-      result &= activeTags.reduce((a, i) => todo.tags.includes(i) || a, false);
+      result &= activeTags.reduce((a, i) => todo.tags.includes(i) && a, true);
       result &=
         (result && activeStatus == "All") ||
         (activeStatus == "Completed") ==
