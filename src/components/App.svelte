@@ -193,7 +193,7 @@
       log>
       <Collection
         path={stateRef.collection('todo')}
-        query={ref => ref.orderBy('order')}
+        query={ref => ref.orderBy('created_on')}
         let:data={todosData}
         let:ref={todosRef}
         log>

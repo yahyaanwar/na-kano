@@ -9,7 +9,6 @@
   let title = "";
   let description = "";
   let reset = "";
-  let is_completed = false;
 
   function addTodo() {
     todoRef.add({
@@ -19,7 +18,7 @@
       workspace: workspace.toLocaleLowerCase(),
       created_on: new Date().toString(),
       edited_on: new Date().toString(),
-      completed_on: is_completed && new Date().toString(),
+      completed_on: false,
       reset: reset.toLowerCase(),
       tags
     });
@@ -35,12 +34,11 @@
     </div>
     <div class="flex" style="padding: 8px 0">
       <label style="width: 100%">
-        <input type="checkbox" bind:value={is_completed} />
         <input
           bind:value={title}
           type="text"
           placeholder="add task"
-          style="font-size: 1rem; font-weight: bold; width: calc(100% - 23px)" />
+          style="font-size: 1.5rem; font-weight: bold; width: 100%" />
       </label>
     </div>
     <div>
@@ -48,10 +46,10 @@
         bind:value={description}
         name="description"
         rows="3"
-        style="width: calc(100% - 24px); margin-left: 24px;"
+        style="width: 100%;"
         placeholder="add description" />
     </div>
-    <div class="flex">
+    <div class="flex" style="flex-flow: wrap;">
       <label>
         Workspace
         <input

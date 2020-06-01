@@ -109,7 +109,7 @@
           type="checkbox"
           checked={getStatus(todo.completed_on, todo.reset)}
           on:click={ev => checkboxChange(todo.ref, ev.target.checked, todo.created_on)} />
-        <strong class="label on-view" style="font-size: 1.8rem">
+        <strong class="label on-view" style="font-size: 1.5rem">
           {todo.title}
         </strong>
       </label>
