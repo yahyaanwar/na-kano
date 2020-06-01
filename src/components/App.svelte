@@ -56,22 +56,27 @@
   let activeTags = [];
   let hideCreate = true;
   let isFilterHidden = false;
+  let filteredTodos = [];
 
   function toggleWorkspace(event) {
     activeWorkspace = event.detail.selected;
     activeTags = [];
+    saveFilterState();
   }
 
   function toggleStatus(event) {
     activeStatus = event.detail.selected;
+    saveFilterState();
   }
 
   function toggleTags(event) {
     activeTags = event.detail.selected;
+    saveFilterState();
   }
 
   function toggleView(event) {
     activeView = event.detail.selected;
+    saveFilterState();
   }
 
   function currentUserChange(event) {
@@ -98,7 +103,7 @@
   }
 
   function saveFilterState() {
-    if (stateRef) {
+    if (stateRef && filteredTodos.length > 0) {
       stateRef.set({
         activeWorkspace,
         activeStatus,
@@ -244,7 +249,8 @@
             bind:activeStatus
             bind:activeWorkspace
             bind:activeTags
-            on:saveFilterState={saveFilterState} />
+            bind:filteredTodos
+             />
           <CreateTodo
             bind:workspace={activeWorkspace}
             bind:tags={activeTags}

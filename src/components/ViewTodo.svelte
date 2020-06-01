@@ -37,25 +37,15 @@
   export let filteredTodos = todos;
 
   $: {
-    filteredTodos = (() => {
-      let newTodo = todos.filter(todo => {
-        let result =
-          activeStatus == "All" ||
-          (activeStatus == "Completed") ==
-            getStatus(todo.completed_on, todo.reset);
-        result &= activeWorkspace == todo.workspace;
-        result &= activeTags.reduce((a, i) => todo.tags.includes(i) && a, true);
-        return result;
-      });
-
-      let view = activeView;
-
-      if (newTodo.length > 0) {
-        dispatch("saveFilterState", {filteredTodos});
-      }
-
-      return newTodo;
-    })();
+    filteredTodos = todos.filter(todo => {
+      let result =
+        activeStatus == "All" ||
+        (activeStatus == "Completed") ==
+          getStatus(todo.completed_on, todo.reset);
+      result &= activeWorkspace == todo.workspace;
+      result &= activeTags.reduce((a, i) => todo.tags.includes(i) && a, true);
+      return result;
+    });
   }
 
   function checkboxChange(ref, state, created_on) {
@@ -113,7 +103,9 @@
           {todo.title}
         </strong>
       </label>
-      <Toggle selected={[]} lists={todo.tags} classList="on-view" disabled />
+      {#if activeView == 'Detail'}
+        <Toggle selected={[]} lists={todo.tags} disabled />
+      {/if}
     </div>
     <div class="flex">
       <p class="description on-detail" style="margin-left: 24px;">

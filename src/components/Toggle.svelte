@@ -27,7 +27,6 @@
   export let single = false;
   export let disabled = false;
   export let edit = false;
-  export let classList = "";
   export let name = "";
 
   let tag = "";
@@ -50,7 +49,7 @@
 {#if edit || lists && lists.length}
   <div>
     <strong>{name}</strong>
-    <div class="tags wrap {classList}">
+    <div class="tags wrap">
       {#each lists
         .filter(x => x)
         .reduce((a, i) => (!a.includes(i) ? [...a, i] : a), []) as list, i}

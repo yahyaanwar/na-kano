@@ -31,7 +31,6 @@
     <Toggle
       selected={[]}
       lists={todo.tags}
-      classList="on-view on-create on-edit"
       disabled />
   </div>
   <div>
