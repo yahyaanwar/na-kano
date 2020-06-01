@@ -54,7 +54,7 @@
   }
 </script>
 
-{#if lists && lists.length}
+{#if edit || lists && lists.length}
   <div>
     <strong>{name}</strong>
     <div class="tags wrap {classList}">
