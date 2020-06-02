@@ -155,6 +155,18 @@
     padding: 8px;
   }
 
+  @media only screen and (max-width: 450px) {
+    .title {
+      display: none;
+    }
+    .header {
+      text-align: center;
+    }
+    .account {
+      width: 100%;
+    }
+  }
+
   @media only screen and (max-width: 600px) {
     .filter,
     .todo,
@@ -217,9 +229,9 @@
               <strong class="capitalize">{activeWorkspace}</strong>
               workspace
               {#if activeTags.length}
-                with tags:
+                with tag{activeTags.length > 1 && 's' || '' }:
                 {#each activeTags as tag, i}
-                  {(i == activeTags.length - 1 && ' and') || (i && ',') || ''}
+                  {(i != 0 && i == activeTags.length - 1 && ' and') || (i && ',') || ''}
                   <strong class="capitalize">{tag}</strong>
                 {/each}
               {/if}
@@ -240,7 +252,7 @@
                 lists={['All', 'Active', 'Completed']}
                 bind:selected={activeStatus}
                 on:toggle={toggleStatus}
-                single />
+                single right/>
             </div>
             <div class="flex">
               <Toggle
@@ -249,13 +261,13 @@
                 lists={todosData
                   .filter(todo => todo.workspace == activeWorkspace)
                   .flatMap(todo => todo.tags)}
-                on:toggle={toggleTags} />
+                on:toggle={toggleTags}/>
               <Toggle
                 name="View"
                 lists={['Simple', 'Detail']}
                 bind:selected={activeView}
                 on:toggle={toggleView}
-                single />
+                single right/>
             </div>
           {/if}
         </section>

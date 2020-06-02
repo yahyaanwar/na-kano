@@ -1,10 +1,4 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-
-  import Toggle from "./Toggle.svelte";
-
-  const dispatch = createEventDispatcher();
-
   function getStatus(completed_on, reset) {
     const completed_date = new Date(completed_on);
     completed_date.setMonth(completed_date.getMonth() + 1);
@@ -75,28 +69,25 @@
 {/if}
 {#each filteredTodos as todo}
   <div class="box task-card">
-    <div class="flex">
-      {#if activeView == 'Detail'}
-        <div class="on-detail">
-          {#if todo.edited_on && todo.edited_on != todo.created_on}
-            <small>Edited: {todo.edited_on.replace(/:\d{2} .*/, '')}</small>
-          {:else}
-            <small>Created: {todo.created_on.replace(/:\d{2} .*/, '')}</small>
+    {#if activeView == 'Detail'}
+      <div class="flex">
+        <small>
+          {(todo.workspace && 'On ' + todo.workspace + ' workspace') || ''}
+        </small>
+        <small style="padding-left: 20px">
+          {todo.reset && 'Reset ' + todo.reset}
+        </small>
+        <small>
+          {#if todo.tags.length}
+            With tag{(todo.tags.length > 1 && 's') || ''}:
+            {#each todo.tags as tag, i}
+              {(i != 0 && i == todo.tags.length - 1 && ' and') || (i && ',') || ''}
+              <strong class="capitalize">{tag}</strong>
+            {/each}
           {/if}
-          {#if todo.completed_on}
-            <small style="padding-left: 20px">
-              Last Completed: {todo.completed_on.replace(/:\d{2} .*/, '')}
-            </small>
-          {/if}
-        </div>
-        <div>
-          <!-- <button class="link on-detail">Edit</button> -->
-          <button class="link on-detail" on:click={() => todo.ref.delete()}>
-            Delete
-          </button>
-        </div>
-      {/if}
-    </div>
+        </small>
+      </div>
+    {/if}
     <div class="flex" style="padding: 8px 0">
       <label>
         <input
@@ -107,14 +98,20 @@
           {todo.title}
         </strong>
       </label>
-      {#if activeView == 'Detail'}
-        <Toggle selected={[]} lists={todo.tags} disabled />
+      {#if activeView == 'Simple'}
+        <small>{todo.tags.join(', ')}</small>
       {/if}
     </div>
-    <div class="flex">
-      <p class="description on-detail" style="margin-left: 24px;">
-        {todo.description}
-      </p>
+    <div class="flex" style="align-items: flex-end">
+      {#if todo.description}
+        <p
+          class="description on-detail"
+          style="margin-left: 24px; white-space: pre-line;">
+          {todo.description}
+        </p>
+      {:else}
+        <span />
+      {/if}
       {#if activeView == 'Simple'}
         <div>
           <!-- <button class="link on-detail">Edit</button> -->
@@ -125,11 +122,35 @@
       {/if}
     </div>
     {#if activeView == 'Detail'}
-      <div>
-        <small>{todo.workspace && 'On ' + todo.workspace}</small>
-        <small style="padding-left: 20px">
-          {todo.reset && 'Reset ' + todo.reset}
+      <div class="flex" style="align-items: flex-end">
+        <small class="flex" style="width: auto">
+          {#if todo.edited_on && todo.edited_on != todo.created_on}
+            <div>
+              Edited:
+              <br />
+              {todo.edited_on.replace(/:\d{2} .*/, '')}
+            </div>
+          {:else}
+            <div>
+              Created:
+              <br />
+              {todo.created_on.replace(/:\d{2} .*/, '')}
+            </div>
+          {/if}
+          {#if todo.completed_on}
+            <div style="padding-left: 20px">
+              Last Completed:
+              <br />
+              {todo.completed_on.replace(/:\d{2} .*/, '')}
+            </div>
+          {/if}
         </small>
+        <div>
+          <!-- <button class="link on-detail">Edit</button> -->
+          <button class="link on-detail" on:click={() => todo.ref.delete()}>
+            Delete
+          </button>
+        </div>
       </div>
     {/if}
   </div>

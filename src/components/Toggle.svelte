@@ -28,6 +28,7 @@
   export let disabled = false;
   export let edit = false;
   export let name = "";
+  export let right = false;
 
   let tag = "";
 
@@ -50,10 +51,16 @@
   }
 </script>
 
+<style>
+  .right {
+    justify-content: flex-end;
+  }
+</style>
+
 {#if edit || (lists && lists.length)}
   <div>
     <strong>{name}</strong>
-    <div class="tags wrap">
+    <div class="tags wrap" class:right>
       {#each lists
         .filter(x => x)
         .reduce((a, i) => (!a.includes(i) ? [...a, i] : a), []) as list, i}
