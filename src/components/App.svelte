@@ -54,7 +54,6 @@
   let activeStatus = "All";
   let activeWorkspace = "All";
   let activeTags = [];
-  let hideCreate = true;
   let isFilterHidden = false;
   let filteredTodos = [];
 
@@ -249,19 +248,16 @@
             bind:activeStatus
             bind:activeWorkspace
             bind:activeTags
-            bind:filteredTodos
-             />
+            bind:filteredTodos />
+        </section>
+        <section
+          class="add_todo"
+          style="position: fixed; bottom: 0; width: 100%; background: white;
+          box-shadow: 0 0 2px black;">
           <CreateTodo
             bind:workspace={activeWorkspace}
             bind:tags={activeTags}
-            bind:hide={hideCreate}
             todoRef={todosRef} />
-          <button
-            class="box"
-            style="width: 100%; margin: 0"
-            on:click={() => (hideCreate = !hideCreate)}>
-            +
-          </button>
         </section>
       </Collection>
     </Doc>
