@@ -202,45 +202,62 @@
         let:data={todosData}
         let:ref={todosRef}
         log>
-        <section
-          class="filter can-hide"
-          class:hide={isFilterHidden}
-          style="--title: 'filters'">
-          <span
-            class="hide-btn"
+        <section class="filter">
+          <div
+            style="color: #931550; text-align: center"
             on:click={() => {
               isFilterHidden = !isFilterHidden;
               saveFilterState();
-            }} />
-          <div class="flex">
-            <Toggle
-              name="Workspaces"
-              lists={todosData.flatMap(todo => todo.workspace)}
-              bind:selected={activeWorkspace}
-              on:toggle={toggleWorkspace}
-              single />
-            <Toggle
-              name="Status"
-              lists={['All', 'Active', 'Completed']}
-              bind:selected={activeStatus}
-              on:toggle={toggleStatus}
-              single />
+            }}>
+            {#if isFilterHidden}
+              <strong class="capitalize">{activeView}</strong>
+              view of
+              <strong class="capitalize">{activeStatus}</strong>
+              todo at
+              <strong class="capitalize">{activeWorkspace}</strong>
+              workspace
+              {#if activeTags.length}
+                with tags:
+                {#each activeTags as tag, i}
+                  {(i == activeTags.length - 1 && ' and') || (i && ',') || ''}
+                  <strong class="capitalize">{tag}</strong>
+                {/each}
+              {/if}
+            {:else}
+              <div style="border: 1px solid #931550">Hide Filter</div>
+            {/if}
           </div>
-          <div class="flex">
-            <Toggle
-              name="Tags"
-              bind:selected={activeTags}
-              lists={todosData
-                .filter(todo => todo.workspace == activeWorkspace)
-                .flatMap(todo => todo.tags)}
-              on:toggle={toggleTags} />
-            <Toggle
-              name="View"
-              lists={['Simple', 'Detail']}
-              bind:selected={activeView}
-              on:toggle={toggleView}
-              single />
-          </div>
+          {#if !isFilterHidden}
+            <div class="flex">
+              <Toggle
+                name="Workspaces"
+                lists={todosData.flatMap(todo => todo.workspace)}
+                bind:selected={activeWorkspace}
+                on:toggle={toggleWorkspace}
+                single />
+              <Toggle
+                name="Status"
+                lists={['All', 'Active', 'Completed']}
+                bind:selected={activeStatus}
+                on:toggle={toggleStatus}
+                single />
+            </div>
+            <div class="flex">
+              <Toggle
+                name="Tags"
+                bind:selected={activeTags}
+                lists={todosData
+                  .filter(todo => todo.workspace == activeWorkspace)
+                  .flatMap(todo => todo.tags)}
+                on:toggle={toggleTags} />
+              <Toggle
+                name="View"
+                lists={['Simple', 'Detail']}
+                bind:selected={activeView}
+                on:toggle={toggleView}
+                single />
+            </div>
+          {/if}
         </section>
         <section class="todo">
           <ViewTodo

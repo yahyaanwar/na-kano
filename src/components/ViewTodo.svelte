@@ -61,9 +61,9 @@
 
 <div class="flex">
   <span>
-    Showing
+    Found
     <strong>{filteredTodos.length}</strong>
-    of
+    from
     <strong>{todos.length}</strong>
     items
   </span>
