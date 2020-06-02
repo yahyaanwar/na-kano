@@ -31,12 +31,16 @@
 
   let tag = "";
 
-  function addTag(event) {
-    tag = tag.trim();
-    if (!lists.map(t => t.toLowerCase()).includes(tag.toLowerCase())) {
-      lists = [...lists, tag];
+  function addTag() {
+    let cleanTag = tag.replace(/[^\w|\s]/g, "").trim();
+    if (
+      tag.search(",") != 0 &&
+      cleanTag.length &&
+      !lists.map(t => t.toLowerCase()).includes(cleanTag.toLowerCase())
+    ) {
+      lists = [...lists, cleanTag];
+      tag = "";
     }
-    tag = "";
   }
 
   function removeTag(tag_index) {
@@ -46,7 +50,7 @@
   }
 </script>
 
-{#if edit || lists && lists.length}
+{#if edit || (lists && lists.length)}
   <div>
     <strong>{name}</strong>
     <div class="tags wrap">
@@ -77,7 +81,7 @@
             placeholder="add tags"
             bind:value={tag}
             on:keyup={ev => {
-              if (ev.keyCode == 13) addTag();
+              if (ev.keyCode == 13 || ev.keyCode == 188) addTag();
             }} />
         </span>
         <span class="tag" on:click={addTag}>+</span>
