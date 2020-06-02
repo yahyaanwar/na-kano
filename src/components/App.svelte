@@ -157,7 +157,8 @@
 
   @media only screen and (max-width: 600px) {
     .filter,
-    .todo {
+    .todo,
+    .add_todo {
       padding: 8px;
     }
   }
