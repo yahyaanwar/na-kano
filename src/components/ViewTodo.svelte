@@ -6,25 +6,29 @@
   const dispatch = createEventDispatcher();
 
   function getStatus(completed_on, reset) {
-    if (!reset || reset == "once") {
-      return Date.parse(completed_on) < Date.now();
-    }
-
-    if (reset.includes("day")) {
-      return (
-        Date.parse(completed_on) + 1000 * 60 * 60 * 24 * parseInt(reset) >
-        Date.now()
-      );
-    }
-
     const completed_date = new Date(completed_on);
     completed_date.setMonth(completed_date.getMonth() + 1);
+    const midNight = new Date().setHours(24, 0, 0, 0);
+    const dayOfWeek = new Date().getDay();
 
     const resetTime = {
-      daily: Date.parse(completed_on) + 1000 * 60 * 60 * 24 > Date.now(),
-      weekly: Date.parse(completed_on) + 1000 * 60 * 60 * 24 * 7 > Date.now(),
-      monthly: completed_date.getTime() > Date.now()
+      daily: Date.parse(completed_on) + 86400000 > midNight,
+      sunday: dayOfWeek !== 0,
+      monday: dayOfWeek !== 1,
+      tuesday: dayOfWeek !== 2,
+      wednesday: dayOfWeek !== 3,
+      thursday: dayOfWeek !== 4,
+      friday: dayOfWeek !== 5,
+      saturday: dayOfWeek !== 6
     };
+
+    if (reset.includes("day")) {
+      return Date.parse(completed_on) + 86400000 * parseInt(reset) > midNight;
+    }
+
+    if (!reset || !Object.keys(resetTime).includes(reset)) {
+      return Date.parse(completed_on) < Date.now();
+    }
 
     return resetTime[reset];
   }

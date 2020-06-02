@@ -55,14 +55,14 @@
         <input
           bind:value={workspace}
           type="text"
-          placeholder="Office, Home, Campus, ..." />
+          placeholder="office, home, campus, ..." />
       </label>
       <label>
         Reset
         <input
           bind:value={reset}
           type="text"
-          placeholder="Daily, Weekly, 3 Days," />
+          placeholder="daily, sunday, monday, ..." />
       </label>
       <button on:click={addTodo}>Save</button>
     </div>
