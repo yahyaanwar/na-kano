@@ -72,10 +72,17 @@
     {#if activeView == 'Detail'}
       <div class="flex">
         <small>
-          {(todo.workspace && 'On ' + todo.workspace + ' workspace') || ''}
+          {#if todo.workspace}
+            On
+            <strong>{todo.workspace}</strong>
+            workspace
+          {/if}
         </small>
-        <small style="padding-left: 20px">
-          {todo.reset && 'Reset ' + todo.reset}
+        <small>
+          {#if todo.reset}
+            Repeated
+            <strong>{todo.reset}</strong>
+          {/if}
         </small>
         <small>
           {#if todo.tags.length}
@@ -89,29 +96,34 @@
       </div>
     {/if}
     <div class="flex" style="padding: 8px 0">
-      <label>
+      <label style="overflow-wrap: break-word; width: 100%;">
         <input
+          style="display: none"
           type="checkbox"
           checked={getStatus(todo.completed_on, todo.reset)}
           on:click={ev => checkboxChange(todo.ref, ev.target.checked, todo.created_on)} />
-        <strong class="label on-view" style="font-size: 1.5rem">
+        <strong class="label on-view" style="font-size: 1.5rem;">
           {todo.title}
         </strong>
       </label>
-      {#if activeView == 'Simple'}
-        <small>{todo.tags.join(', ')}</small>
-      {/if}
     </div>
     <div class="flex" style="align-items: flex-end">
-      {#if todo.description}
-        <p
-          class="description on-detail"
-          style="margin-left: 24px; white-space: pre-line;">
-          {todo.description}
-        </p>
-      {:else}
-        <span />
-      {/if}
+      <div> 
+        {#if todo.description && activeView == 'Detail'}
+          <p
+            class="description on-detail"
+            style="white-space: pre-line;">
+            {todo.description}
+          </p>
+        {/if}
+        {#if activeView == 'Simple'}
+          <small>
+            <strong>{todo.tags.join(', ')}</strong>
+            on
+            <strong>{todo.workspace}</strong>
+          </small>
+        {/if}
+      </div>
       {#if activeView == 'Simple'}
         <div>
           <!-- <button class="link on-detail">Edit</button> -->
@@ -128,20 +140,20 @@
             <div>
               Edited:
               <br />
-              {todo.edited_on.replace(/:\d{2} .*/, '')}
+              <strong>{todo.edited_on.replace(/:\d{2} .*/, '')}</strong>
             </div>
           {:else}
             <div>
               Created:
               <br />
-              {todo.created_on.replace(/:\d{2} .*/, '')}
+              <strong>{todo.created_on.replace(/:\d{2} .*/, '')}</strong>
             </div>
           {/if}
           {#if todo.completed_on}
             <div style="padding-left: 20px">
               Last Completed:
               <br />
-              {todo.completed_on.replace(/:\d{2} .*/, '')}
+              <strong>{todo.completed_on.replace(/:\d{2} .*/, '')}</strong>
             </div>
           {/if}
         </small>

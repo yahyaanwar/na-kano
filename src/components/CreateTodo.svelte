@@ -4,25 +4,29 @@
   export let todoRef = false;
   export let workspace = "";
   export let tags = [];
+  export let hide = true;
 
   let title = "";
   let description = "";
   let reset = "";
-  let hide = true;
 
   function addTodo() {
-    todoRef.add({
-      order: 1,
-      title,
-      description,
-      workspace: workspace.toLocaleLowerCase(),
-      created_on: new Date().toString(),
-      edited_on: new Date().toString(),
-      completed_on: false,
-      reset: reset.toLowerCase(),
-      tags
-    });
-    hide = true;
+    if (title.trim().length) {
+      todoRef.add({
+        order: 1,
+        title,
+        description,
+        workspace: workspace.toLocaleLowerCase(),
+        created_on: new Date().toString(),
+        edited_on: new Date().toString(),
+        completed_on: false,
+        reset: reset.toLowerCase(),
+        tags
+      });
+      hide = true;
+      title = "";
+      description = "";
+    }
   }
 </script>
 
@@ -51,22 +55,22 @@
   <div class="flex" style="flex-flow: wrap;">
     <label>
       Workspace
-      <br>
+      <br />
       <input
         bind:value={workspace}
         type="text"
         placeholder="office, home, campus, ..." />
     </label>
     <label>
-      Reset
-      <br>
+      Repeat
+      <br />
       <input
         bind:value={reset}
         type="text"
         placeholder="daily, sunday, monday, ..." />
     </label>
   </div>
-<br>
+  <br />
 {/if}
 <div class="flex">
   <button
@@ -76,10 +80,7 @@
     {hide ? 'New Todo' : 'Cancel'}
   </button>
   {#if !hide}
-    <button
-      class="box"
-      style="width: 100%; margin: 0"
-      on:click={addTodo}>
+    <button class="box" style="width: 100%; margin: 0" on:click={addTodo}>
       Save
     </button>
   {/if}
