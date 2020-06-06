@@ -10,7 +10,7 @@
     "last 1 chrome versions"
   ],
   "scripts": {
-    "dev": "parcel serve src/index.html --no-hmr",
+    "dev": "parcel serve src/index.html",
     "build": "parcel build src/index.html",
     "start": "sirv dist/"
   },
