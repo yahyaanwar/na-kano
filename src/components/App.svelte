@@ -269,7 +269,7 @@
                 name="Tags"
                 bind:selected={activeTags}
                 lists={todosData
-                  .filter(todo => todo.workspace == activeWorkspace)
+                  .filter(todo => todo.workspace == activeWorkspace && activeTags.reduce((all, tags) => all && todo.tags.includes(tags), true))
                   .flatMap(todo => todo.tags)}
                 on:toggle={toggleTags} />
               <Toggle
