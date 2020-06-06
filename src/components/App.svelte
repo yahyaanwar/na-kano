@@ -1,7 +1,6 @@
 <script>
   import { FirebaseApp, User, Doc, Collection } from "sveltefire/src";
   import Toggle from "./Toggle.svelte";
-  // import Todos from "./Todos.svelte";
   import CreateTodo from "./CreateTodo.svelte";
   import ViewTodo from "./ViewTodo.svelte";
 
